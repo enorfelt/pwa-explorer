@@ -46,7 +46,7 @@ export class NotificationService {
     const sub = await reg.pushManager.getSubscription();
     if (sub) {
       await firstValueFrom(
-        this.http.delete(`${environment.apiUrl}/unsubscribe`, { body: sub.toJSON() }),
+        this.http.delete(`${environment.apiUrl}/subscribe`, { body: sub.toJSON() }),
       );
       await sub.unsubscribe();
     }
