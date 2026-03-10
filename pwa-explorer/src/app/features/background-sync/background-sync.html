@@ -1,0 +1,47 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Background Sync
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Background Sync API is not supported in this browser.</p>
+  } @else {
+    <div class="info-note">
+      <mat-icon>info</mat-icon>
+      <span>The service worker fires a <code>sync</code> event when connectivity is restored,
+        allowing deferred data to be sent reliably.</span>
+    </div>
+
+    <h2 class="section-title">Register Tag</h2>
+    <div class="register-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Sync Tag</mat-label>
+        <input matInput [(ngModel)]="tagName" name="tagName" />
+      </mat-form-field>
+      <button mat-flat-button (click)="register()">
+        <mat-icon>sync</mat-icon>
+        Register
+      </button>
+    </div>
+
+    <h2 class="section-title">Pending Tags</h2>
+    <button mat-stroked-button (click)="loadTags()">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+    @if (pendingTags().length > 0) {
+      <ul class="tag-list">
+        @for (tag of pendingTags(); track tag) {
+          <li class="tag-chip">{{ tag }}</li>
+        }
+      </ul>
+    } @else {
+      <p class="empty-msg">No pending tags.</p>
+    }
+
+    @if (status(); as msg) {
+      <p class="result-msg" role="status">{{ msg }}</p>
+    }
+  }
+</div>

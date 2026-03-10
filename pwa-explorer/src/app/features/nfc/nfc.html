@@ -1,0 +1,61 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Web NFC
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Web NFC is not supported in this browser. It requires Android Chrome.</p>
+  } @else {
+    <h2 class="section-title">Read</h2>
+    <div class="scan-indicator" [class.active]="scanning()">
+      <mat-icon>{{ scanning() ? 'nfc' : 'nfc' }}</mat-icon>
+      {{ scanning() ? 'Scanning…' : 'Not scanning' }}
+    </div>
+    <div class="scan-actions">
+      @if (!scanning()) {
+        <button mat-flat-button (click)="startScan()">
+          <mat-icon>play_arrow</mat-icon>
+          Start Scan
+        </button>
+      } @else {
+        <button mat-stroked-button (click)="stopScan()">
+          <mat-icon>stop</mat-icon>
+          Stop Scan
+        </button>
+      }
+    </div>
+
+    @if (lastTag(); as tag) {
+      <div class="tag-record">
+        <div class="tag-serial">
+          <mat-icon>tag</mat-icon>
+          <strong>Serial:</strong> {{ tag.serialNumber }}
+        </div>
+        @if (tag.message?.records?.length) {
+          <ul class="record-list">
+            @for (record of tag.message.records; track $index) {
+              <li>{{ record.recordType }}: {{ record.data }}</li>
+            }
+          </ul>
+        }
+      </div>
+    }
+
+    <h2 class="section-title">Write</h2>
+    <div class="write-row">
+      <mat-form-field appearance="outline">
+        <mat-label>Text to write</mat-label>
+        <input matInput [(ngModel)]="writeText" name="writeText" />
+      </mat-form-field>
+      <button mat-flat-button (click)="writeTag()" [disabled]="!writeText">
+        <mat-icon>edit</mat-icon>
+        Write to Tag
+      </button>
+    </div>
+
+    @if (status(); as msg) {
+      <p class="result-msg" role="status">{{ msg }}</p>
+    }
+  }
+</div>

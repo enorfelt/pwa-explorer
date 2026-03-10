@@ -1,19 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
 
-import { Home } from './home';
+import { Nfc } from './nfc';
 
-describe('Home', () => {
-  let component: Home;
-  let fixture: ComponentFixture<Home>;
+describe('Nfc', () => {
+  let component: Nfc;
+  let fixture: ComponentFixture<Nfc>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Home],
-      providers: [provideRouter([])],
+      imports: [Nfc],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Home);
+    fixture = TestBed.createComponent(Nfc);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

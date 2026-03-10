@@ -46,5 +46,21 @@ export const routes: Routes = [
     path: 'compare',
     loadComponent: () => import('./features/compare/compare').then(m => m.Compare),
   },
+  {
+    path: 'background-sync',
+    loadComponent: () => import('./features/background-sync/background-sync').then(m => m.BackgroundSync),
+  },
+  {
+    path: 'contacts',
+    loadComponent: () => import('./features/contacts/contacts').then(m => m.Contacts),
+  },
+  {
+    path: 'bluetooth',
+    loadComponent: () => import('./features/bluetooth/bluetooth').then(m => m.Bluetooth),
+  },
+  {
+    path: 'nfc',
+    loadComponent: () => import('./features/nfc/nfc').then(m => m.Nfc),
+  },
   { path: '**', redirectTo: '' },
 ];

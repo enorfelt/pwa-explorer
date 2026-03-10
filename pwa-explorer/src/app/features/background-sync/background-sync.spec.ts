@@ -1,19 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
 
-import { Home } from './home';
+import { BackgroundSync } from './background-sync';
 
-describe('Home', () => {
-  let component: Home;
-  let fixture: ComponentFixture<Home>;
+describe('BackgroundSync', () => {
+  let component: BackgroundSync;
+  let fixture: ComponentFixture<BackgroundSync>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Home],
-      providers: [provideRouter([])],
+      imports: [BackgroundSync],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Home);
+    fixture = TestBed.createComponent(BackgroundSync);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

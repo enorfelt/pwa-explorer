@@ -1,19 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
 
-import { Home } from './home';
+import { Bluetooth } from './bluetooth';
 
-describe('Home', () => {
-  let component: Home;
-  let fixture: ComponentFixture<Home>;
+describe('Bluetooth', () => {
+  let component: Bluetooth;
+  let fixture: ComponentFixture<Bluetooth>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [Home],
-      providers: [provideRouter([])],
+      imports: [Bluetooth],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(Home);
+    fixture = TestBed.createComponent(Bluetooth);
     component = fixture.componentInstance;
     await fixture.whenStable();
   });

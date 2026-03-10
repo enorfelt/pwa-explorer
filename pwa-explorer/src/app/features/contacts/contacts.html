@@ -1,0 +1,55 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Contacts Picker
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Contacts Picker API is not supported in this browser.</p>
+  } @else {
+    @if (availableProperties().length > 0) {
+      <h2 class="section-title">Available Properties</h2>
+      <div class="property-chips">
+        @for (prop of availableProperties(); track prop) {
+          <span class="property-chip">{{ prop }}</span>
+        }
+      </div>
+    }
+
+    <h2 class="section-title">Pick Contacts</h2>
+    <button mat-flat-button (click)="pickContacts()">
+      <mat-icon>contacts</mat-icon>
+      Pick Contacts
+    </button>
+
+    @if (selectedContacts().length > 0) {
+      <h2 class="section-title">Results</h2>
+      @for (contact of selectedContacts(); track $index) {
+        <div class="contact-card">
+          @if (contact.name?.length) {
+            <div class="contact-field">
+              <mat-icon>person</mat-icon>
+              <span>{{ contact.name!.join(', ') }}</span>
+            </div>
+          }
+          @if (contact.email?.length) {
+            <div class="contact-field">
+              <mat-icon>email</mat-icon>
+              <span>{{ contact.email!.join(', ') }}</span>
+            </div>
+          }
+          @if (contact.tel?.length) {
+            <div class="contact-field">
+              <mat-icon>phone</mat-icon>
+              <span>{{ contact.tel!.join(', ') }}</span>
+            </div>
+          }
+        </div>
+      }
+    }
+
+    @if (status(); as msg) {
+      <p class="result-msg" role="status">{{ msg }}</p>
+    }
+  }
+</div>

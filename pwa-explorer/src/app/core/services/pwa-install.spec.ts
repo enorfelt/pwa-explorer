@@ -6,6 +6,18 @@ describe('PwaInstall', () => {
   let service: PwaInstall;
 
   beforeEach(() => {
+    Object.defineProperty(window, 'matchMedia', {
+      writable: true,
+      value: (query: string) => ({
+        matches: false,
+        media: query,
+        onchange: null,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        dispatchEvent: () => false,
+      }),
+    });
+
     TestBed.configureTestingModule({});
     service = TestBed.inject(PwaInstall);
   });

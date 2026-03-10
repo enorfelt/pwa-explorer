@@ -1,0 +1,61 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Web Bluetooth
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Web Bluetooth API is not supported in this browser.</p>
+  } @else {
+    <h2 class="section-title">Device</h2>
+    <div class="device-card">
+      <div class="device-actions">
+        <button mat-flat-button (click)="scan()">
+          <mat-icon>bluetooth_searching</mat-icon>
+          Scan for Device
+        </button>
+
+        @if (device()) {
+          <span class="device-name">
+            <mat-icon>bluetooth</mat-icon>
+            {{ device()!.name ?? 'Unknown device' }}
+          </span>
+
+          @if (!server()) {
+            <button mat-stroked-button (click)="connect()" [disabled]="connecting()">
+              <mat-icon>link</mat-icon>
+              {{ connecting() ? 'Connecting…' : 'Connect' }}
+            </button>
+          } @else {
+            <button mat-stroked-button (click)="disconnect()">
+              <mat-icon>link_off</mat-icon>
+              Disconnect
+            </button>
+          }
+        }
+      </div>
+
+      <div class="indicator" [class.connected]="!!server()">
+        {{ server() ? 'Connected' : 'Not connected' }}
+      </div>
+    </div>
+
+    @if (server()) {
+      <h2 class="section-title">Battery</h2>
+      <button mat-flat-button (click)="readBattery()">
+        <mat-icon>battery_std</mat-icon>
+        Read Battery Level
+      </button>
+      @if (batteryLevel() !== null) {
+        <div class="battery-display">
+          <mat-icon>battery_full</mat-icon>
+          <span>{{ batteryLevel() }}%</span>
+        </div>
+      }
+    }
+
+    @if (status(); as msg) {
+      <p class="result-msg" role="status">{{ msg }}</p>
+    }
+  }
+</div>
