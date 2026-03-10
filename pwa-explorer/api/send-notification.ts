@@ -33,7 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     url?: string;
   };
 
-  const data = await redis.hgetall<Record<string, string>>(KV_KEY);
+  const data = await redis.hgetall<Record<string, webpush.PushSubscription>>(KV_KEY);
   if (!data || Object.keys(data).length === 0) {
     res.status(400).json({ error: 'No subscribers' });
     return;
@@ -43,8 +43,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let sent = 0;
   let failed = 0;
 
-  for (const [field, subJson] of Object.entries(data)) {
-    const sub = JSON.parse(subJson) as webpush.PushSubscription;
+  for (const [field, sub] of Object.entries(data)) {
     try {
       await webpush.sendNotification(sub, payload);
       sent++;

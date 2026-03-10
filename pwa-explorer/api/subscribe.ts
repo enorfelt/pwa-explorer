@@ -33,7 +33,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       res.status(400).json({ error: 'Invalid subscription' });
       return;
     }
-    await redis.hset(KV_KEY, { [endpointField(sub.endpoint)]: JSON.stringify(sub) });
+    await redis.hset(KV_KEY, { [endpointField(sub.endpoint)]: sub });
     res.status(201).json({ message: 'Subscribed successfully' });
   } else if (req.method === 'DELETE') {
     const sub = req.body as PushSubscription;
