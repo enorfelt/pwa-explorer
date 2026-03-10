@@ -6,10 +6,5 @@
   "rewrites": [
     { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/(.*)", "destination": "/index.html" }
-  ],
-  "env": {
-    "VAPID_EMAIL": "@vapid_email",
-    "VAPID_PUBLIC_KEY": "@vapid_public_key",
-    "VAPID_PRIVATE_KEY": "@vapid_private_key"
-  }
+  ]
 }
