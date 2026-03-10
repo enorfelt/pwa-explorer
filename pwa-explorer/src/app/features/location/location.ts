@@ -13,23 +13,11 @@ import {
 import { MatButton } from '@angular/material/button';
 import { MatIcon } from '@angular/material/icon';
 import { MatSlideToggle } from '@angular/material/slide-toggle';
+import * as L from 'leaflet';
+import { Map as LeafletMap, Marker } from 'leaflet';
 import { Subscription } from 'rxjs';
 import { Geolocation, GeoPosition } from '../../core/services/geolocation';
 import { SupportBadge } from '../../shared/components/support-badge/support-badge';
-
-declare const L: {
-  map: (el: HTMLElement, opts: object) => LeafletMap;
-  tileLayer: (url: string, opts: object) => LeafletLayer;
-  marker: (pos: [number, number]) => LeafletMarker;
-};
-
-interface LeafletMap {
-  setView(latlng: [number, number], zoom: number): LeafletMap;
-  addLayer(layer: LeafletLayer | LeafletMarker): LeafletMap;
-  remove(): void;
-}
-interface LeafletLayer { addTo(map: LeafletMap): LeafletLayer; }
-interface LeafletMarker { addTo(map: LeafletMap): LeafletMarker; setLatLng(latlng: [number, number]): LeafletMarker; }
 
 @Component({
   selector: 'app-location',
@@ -43,7 +31,7 @@ export class Location implements AfterViewInit, OnDestroy {
   private readonly zone = inject(NgZone);
   private watchSub?: Subscription;
   private leafletMap?: LeafletMap;
-  private marker?: LeafletMarker;
+  private marker?: Marker;
 
   protected readonly mapRef = viewChild<ElementRef<HTMLDivElement>>('mapEl');
   protected readonly isSupported = this.geoService.isSupported;
@@ -64,12 +52,11 @@ export class Location implements AfterViewInit, OnDestroy {
 
   private initMap(): void {
     const el = this.mapRef()?.nativeElement;
-    if (!el || typeof L === 'undefined') return;
-    this.leafletMap = L.map(el, {});
-    this.leafletMap.setView([51.505, -0.09], 13);
+    if (!el) return;
+    this.leafletMap = L.map(el).setView([51.505, -0.09], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '© OpenStreetMap contributors',
-    }).addTo(this.leafletMap as unknown as LeafletMap);
+    }).addTo(this.leafletMap);
   }
 
   protected getLocation(): void {
@@ -109,14 +96,13 @@ export class Location implements AfterViewInit, OnDestroy {
   }
 
   private updateMap(pos: GeoPosition): void {
-    if (!this.leafletMap || typeof L === 'undefined') return;
+    if (!this.leafletMap) return;
     const latlng: [number, number] = [pos.latitude, pos.longitude];
     this.leafletMap.setView(latlng, 15);
     if (!this.marker) {
-      this.marker = L.marker(latlng).addTo(this.leafletMap as unknown as LeafletMap);
+      this.marker = L.marker(latlng).addTo(this.leafletMap);
     } else {
       this.marker.setLatLng(latlng);
     }
   }
 }
-
