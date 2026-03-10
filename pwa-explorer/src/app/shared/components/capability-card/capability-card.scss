@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+.capability-card {
+  cursor: pointer;
+  height: 100%;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+.card-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--mat-sys-primary-container);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+}
+
+.capability-icon {
+  color: var(--mat-sys-on-primary-container);
+}
+
+.card-description {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 4px 0 8px;
+  line-height: 1.4;
+}

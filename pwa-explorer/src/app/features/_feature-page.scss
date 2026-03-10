@@ -1,0 +1,48 @@
+.feature-page {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  margin: 0 0 16px;
+  flex-wrap: wrap;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 16px 0 8px;
+}
+
+.unsupported-msg {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  padding: 12px 16px;
+  border-radius: 8px;
+}
+
+.error-msg {
+  background: var(--mat-sys-error-container);
+  color: var(--mat-sys-on-error-container);
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}
+
+.info-card {
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin: 8px 0;
+  font-size: 0.875rem;
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+}

@@ -1,0 +1,64 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Device Sensors
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">DeviceOrientationEvent is not supported in this browser.</p>
+  } @else {
+    <div class="controls">
+      @if (!isActive()) {
+        <button mat-flat-button (click)="startSensors()">
+          <mat-icon>sensors</mat-icon>
+          Start Sensors
+        </button>
+      } @else {
+        <button mat-stroked-button (click)="stopSensors()">
+          <mat-icon>stop</mat-icon>
+          Stop Sensors
+        </button>
+      }
+    </div>
+
+    @if (permissionError()) {
+      <p class="error-msg" role="alert">{{ permissionError() }}</p>
+    }
+
+    @if (isActive()) {
+      <div class="sensor-grid">
+        <div class="sensor-card" aria-live="polite">
+          <h2>Compass</h2>
+          <div
+            class="compass"
+            [style.transform]="'rotate(' + compassDeg() + 'deg)'"
+            aria-label="Compass heading"
+          >
+            <mat-icon>navigation</mat-icon>
+          </div>
+          <p class="sensor-value">&alpha; {{ orientation()?.alpha?.toFixed(1) ?? '--' }}°</p>
+        </div>
+
+        <div class="sensor-card" aria-live="polite">
+          <h2>Orientation</h2>
+          <div class="data-rows">
+            <div class="data-row"><span>&alpha; (yaw)</span><strong>{{ orientation()?.alpha?.toFixed(1) ?? '--' }}°</strong></div>
+            <div class="data-row"><span>&beta; (pitch)</span><strong>{{ orientation()?.beta?.toFixed(1) ?? '--' }}°</strong></div>
+            <div class="data-row"><span>&gamma; (roll)</span><strong>{{ orientation()?.gamma?.toFixed(1) ?? '--' }}°</strong></div>
+          </div>
+        </div>
+
+        @if (motion(); as m) {
+          <div class="sensor-card" aria-live="polite">
+            <h2>Acceleration</h2>
+            <div class="data-rows">
+              <div class="data-row"><span>X</span><strong>{{ m.acceleration.x?.toFixed(2) ?? '--' }}</strong></div>
+              <div class="data-row"><span>Y</span><strong>{{ m.acceleration.y?.toFixed(2) ?? '--' }}</strong></div>
+              <div class="data-row"><span>Z</span><strong>{{ m.acceleration.z?.toFixed(2) ?? '--' }}</strong></div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+  }
+</div>

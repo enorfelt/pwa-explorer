@@ -1,0 +1,24 @@
+<mat-toolbar class="app-toolbar" role="banner">
+  <span class="app-title">PWA Explorer</span>
+  <span class="toolbar-spacer"></span>
+  <app-install-banner />
+</mat-toolbar>
+
+<main class="app-content" id="main-content" role="main">
+  <router-outlet />
+</main>
+
+<nav class="bottom-nav" aria-label="Main navigation">
+  @for (item of navItems; track item.path) {
+    <a
+      [routerLink]="item.path"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: item.exact }"
+      [attr.aria-label]="item.label"
+      class="nav-item"
+    >
+      <mat-icon aria-hidden="true">{{ item.icon }}</mat-icon>
+      <span class="nav-label">{{ item.label }}</span>
+    </a>
+  }
+</nav>

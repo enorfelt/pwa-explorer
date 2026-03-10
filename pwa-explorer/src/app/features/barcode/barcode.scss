@@ -1,0 +1,44 @@
+@use '../feature-page';
+
+.scanner-controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.scanner-view {
+  width: 100%;
+  max-width: 480px;
+  margin-bottom: 24px;
+  border-radius: 12px;
+  overflow: hidden;
+
+  :global(#html5-qrcode-button-camera-permission),
+  :global(#html5-qrcode-button-camera-stop),
+  :global(#html5-qrcode-button-file-selection) {
+    padding: 8px 16px;
+    background: var(--mat-sys-primary);
+    color: var(--mat-sys-on-primary);
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.875rem;
+    margin: 4px;
+  }
+}
+
+.scan-result-item {
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+.info-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+}

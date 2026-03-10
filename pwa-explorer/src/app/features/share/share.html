@@ -1,0 +1,32 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Web Share
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Web Share API is not supported in this browser.</p>
+  } @else {
+    <form class="share-form" (ngSubmit)="share()">
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Title</mat-label>
+        <input matInput [(ngModel)]="title" name="title" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Text</mat-label>
+        <input matInput [(ngModel)]="text" name="text" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>URL</mat-label>
+        <input matInput [(ngModel)]="url" name="url" type="url" />
+      </mat-form-field>
+      <button mat-flat-button type="submit">
+        <mat-icon>share</mat-icon>
+        Share via OS Sheet
+      </button>
+    </form>
+    @if (lastResult(); as result) {
+      <p class="result-msg" role="status">{{ result }}</p>
+    }
+  }
+</div>

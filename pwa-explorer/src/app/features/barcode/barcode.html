@@ -1,0 +1,56 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Barcode Scanner
+    <app-support-badge [level]="isNativeSupported() ? 'supported' : 'partial'" />
+  </h1>
+
+  @if (!isNativeSupported()) {
+    <p class="info-card">
+      <mat-icon aria-hidden="true">info</mat-icon>
+      Native BarcodeDetector is not available — using html5-qrcode library as fallback.
+    </p>
+  }
+
+  <div class="scanner-controls">
+    @if (!isScanning()) {
+      <button mat-flat-button (click)="startScanner()">
+        <mat-icon>qr_code_scanner</mat-icon>
+        Start Scanner
+      </button>
+    } @else {
+      <button mat-stroked-button (click)="stopScanner()">
+        <mat-icon>stop</mat-icon>
+        Stop Scanner
+      </button>
+    }
+    @if (results().length) {
+      <button mat-stroked-button (click)="clearResults()">
+        <mat-icon>clear_all</mat-icon>
+        Clear
+      </button>
+    }
+  </div>
+
+  @if (error()) {
+    <p class="error-msg" role="alert">{{ error() }}</p>
+  }
+
+  @if (isScanning()) {
+    <div id="qr-reader" class="scanner-view"></div>
+  }
+
+  @if (results().length) {
+    <section aria-label="Scan results">
+      <h2 class="section-title">Scan Results ({{ results().length }})</h2>
+      <mat-list>
+        @for (result of results(); track result.timestamp) {
+          <mat-list-item class="scan-result-item">
+            <mat-icon matListItemIcon aria-hidden="true">qr_code</mat-icon>
+            <div matListItemTitle>{{ result.text }}</div>
+            <div matListItemLine>{{ result.format }} &bull; {{ result.timestamp.toLocaleTimeString() }}</div>
+          </mat-list-item>
+        }
+      </mat-list>
+    </section>
+  }
+</div>

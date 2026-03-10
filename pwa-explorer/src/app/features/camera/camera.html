@@ -1,0 +1,71 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Camera &amp; Media
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Camera access is not supported in this browser.</p>
+  } @else {
+    <div class="camera-container">
+      <div class="video-wrapper" [class.active]="isStreaming()">
+        @if (isLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="48" />
+        }
+        <video
+          #videoEl
+          class="video-preview"
+          [class.visible]="isStreaming()"
+          autoplay
+          playsinline
+          muted
+          aria-label="Camera preview"
+        ></video>
+      </div>
+
+      @if (error()) {
+        <p class="error-msg" role="alert">{{ error() }}</p>
+      }
+
+      <div class="controls">
+        @if (!isStreaming()) {
+          <button mat-flat-button (click)="startCamera()" [disabled]="isLoading()">
+            <mat-icon>camera_alt</mat-icon>
+            Start Camera
+          </button>
+        } @else {
+          <button mat-icon-button (click)="toggleCamera()" aria-label="Switch camera">
+            <mat-icon>flip_camera_ios</mat-icon>
+          </button>
+          <button mat-fab (click)="capturePhoto()" aria-label="Capture photo" class="capture-btn">
+            <mat-icon>photo_camera</mat-icon>
+          </button>
+          <button mat-icon-button (click)="stopCamera()" aria-label="Stop camera">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </div>
+    </div>
+
+    @if (capturedPhotos().length) {
+      <section aria-label="Captured photos">
+        <h2 class="section-title">Captured Photos ({{ capturedPhotos().length }})</h2>
+        <div class="photo-gallery">
+          @for (photo of capturedPhotos(); track $index) {
+            <div class="photo-item">
+              <img [src]="photo" alt="Captured photo {{ $index + 1 }}" class="thumbnail" />
+              <button
+                mat-icon-button
+                class="delete-btn"
+                (click)="removePhoto($index)"
+                [attr.aria-label]="'Delete photo ' + ($index + 1)"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </div>
+      </section>
+    }
+  }
+</div>

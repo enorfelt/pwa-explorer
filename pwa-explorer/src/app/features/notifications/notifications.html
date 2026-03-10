@@ -1,0 +1,62 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Push Notifications
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Web Push is not supported in this browser.</p>
+  } @else {
+    <section class="section">
+      <h2 class="section-title">Permission</h2>
+      <div class="permission-badge" [class]="'perm-' + permission()">
+        <mat-icon>{{ permission() === 'granted' ? 'notifications_active' : permission() === 'denied' ? 'notifications_off' : 'notifications' }}</mat-icon>
+        <span>{{ permission() | titlecase }}</span>
+      </div>
+      @if (permission() !== 'granted') {
+        <button mat-flat-button (click)="requestPermission()" [disabled]="permission() === 'denied'">
+          Request Permission
+        </button>
+        @if (permission() === 'denied') {
+          <p class="hint">Permission was denied. Reset it via browser site settings.</p>
+        }
+      }
+    </section>
+
+    @if (permission() === 'granted') {
+      <section class="section">
+        <h2 class="section-title">Push Subscription</h2>
+        <div class="sub-status" [class.active]="isSubscribed()">
+          <mat-icon>{{ isSubscribed() ? 'radio_button_checked' : 'radio_button_unchecked' }}</mat-icon>
+          <span>{{ isSubscribed() ? 'Subscribed' : 'Not subscribed' }}</span>
+        </div>
+        @if (!isSubscribed()) {
+          <button mat-flat-button (click)="subscribe()">
+            <mat-icon>add_alert</mat-icon>
+            Subscribe
+          </button>
+        } @else {
+          <button mat-stroked-button (click)="unsubscribe()">
+            <mat-icon>notifications_off</mat-icon>
+            Unsubscribe
+          </button>
+        }
+      </section>
+
+      @if (isSubscribed()) {
+        <section class="section">
+          <h2 class="section-title">Test Notification</h2>
+          <p class="hint">Sends a push via the backend server. The server must be running locally or deployed.</p>
+          <button mat-flat-button (click)="sendTest()" [disabled]="sending()">
+            <mat-icon>send</mat-icon>
+            {{ sending() ? 'Sending...' : 'Send Test Notification' }}
+          </button>
+        </section>
+      }
+    }
+
+    @if (status()) {
+      <p class="status-msg" role="status">{{ status() }}</p>
+    }
+  }
+</div>

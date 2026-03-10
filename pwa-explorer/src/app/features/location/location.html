@@ -1,0 +1,48 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Geolocation
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Geolocation is not supported in this browser.</p>
+  } @else {
+    <div class="controls">
+      <mat-slide-toggle [checked]="highAccuracy()" (change)="highAccuracy.set($event.checked)">
+        High Accuracy (GPS)
+      </mat-slide-toggle>
+      <button mat-flat-button (click)="getLocation()" [disabled]="isLoading()">
+        <mat-icon>my_location</mat-icon>
+        Get Location
+      </button>
+      <button
+        mat-flat-button
+        [class.watching]="isWatching()"
+        (click)="toggleWatch()"
+      >
+        <mat-icon>{{ isWatching() ? 'stop' : 'track_changes' }}</mat-icon>
+        {{ isWatching() ? 'Stop Watch' : 'Watch Position' }}
+      </button>
+    </div>
+
+    @if (error()) {
+      <p class="error-msg" role="alert">{{ error() }}</p>
+    }
+
+    <div #mapEl class="map" aria-label="Location map"></div>
+
+    @if (position(); as pos) {
+      <div class="position-details" role="region" aria-label="Position details">
+        <div class="coord-row"><span>Latitude</span><strong>{{ pos.latitude | number: '1.6-6' }}</strong></div>
+        <div class="coord-row"><span>Longitude</span><strong>{{ pos.longitude | number: '1.6-6' }}</strong></div>
+        <div class="coord-row"><span>Accuracy</span><strong>±{{ pos.accuracy | number: '1.0-0' }} m</strong></div>
+        @if (pos.altitude !== null) {
+          <div class="coord-row"><span>Altitude</span><strong>{{ pos.altitude | number: '1.0-0' }} m</strong></div>
+        }
+        @if (pos.speed !== null) {
+          <div class="coord-row"><span>Speed</span><strong>{{ pos.speed | number: '1.1-1' }} m/s</strong></div>
+        }
+      </div>
+    }
+  }
+</div>

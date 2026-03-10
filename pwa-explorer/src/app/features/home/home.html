@@ -1,0 +1,20 @@
+<div class="home">
+  <div class="summary-banner" role="status" aria-live="polite">
+    <mat-icon aria-hidden="true">devices</mat-icon>
+    <span>{{ capSvc.supportedCount() }} of {{ capSvc.totalCount() }} capabilities supported on this device</span>
+  </div>
+
+  @for (section of sections; track section.id) {
+    <section [attr.aria-labelledby]="section.id" class="category-section">
+      <h2 [id]="section.id" class="category-heading">
+        <mat-icon aria-hidden="true">{{ section.icon }}</mat-icon>
+        {{ section.title }}
+      </h2>
+      <div class="capability-grid">
+        @for (cap of section.caps(); track cap.id) {
+          <app-capability-card [capability]="cap" />
+        }
+      </div>
+    </section>
+  }
+</div>

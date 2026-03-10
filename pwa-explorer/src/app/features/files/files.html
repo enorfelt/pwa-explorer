@@ -1,0 +1,67 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    File System
+    <app-support-badge [level]="isFileSystemAccessSupported ? 'supported' : 'partial'" />
+  </h1>
+
+  @if (!isFileSystemAccessSupported) {
+    <p class="info-msg">
+      <mat-icon aria-hidden="true">info</mat-icon>
+      File System Access API unavailable — using file input fallback.
+    </p>
+  }
+
+  <section class="section" aria-labelledby="file-ops-heading">
+    <h2 id="file-ops-heading" class="section-title">File Operations</h2>
+    <div class="controls">
+      <button mat-flat-button (click)="openFile()" [disabled]="isLoading()">
+        <mat-icon>folder_open</mat-icon>
+        Open File
+      </button>
+      <button mat-stroked-button (click)="saveFile()" [disabled]="isLoading()">
+        <mat-icon>save</mat-icon>
+        Save File
+      </button>
+    </div>
+
+    @if (error()) { <p class="error-msg" role="alert">{{ error() }}</p> }
+
+    @if (fileContent(); as fc) {
+      <div class="file-preview">
+        <p class="file-name"><mat-icon aria-hidden="true">description</mat-icon> {{ fc.name }}</p>
+        <pre class="file-content">{{ fc.content.slice(0, 2000) }}{{ fc.content.length > 2000 ? '\n...(truncated)' : '' }}</pre>
+      </div>
+    }
+  </section>
+
+  <section class="section" aria-labelledby="opfs-heading">
+    <h2 id="opfs-heading" class="section-title">Origin Private File System (OPFS)</h2>
+    <div class="controls">
+      <button mat-stroked-button (click)="writeOpfs()">
+        <mat-icon>edit</mat-icon>
+        Write to OPFS
+      </button>
+      <button mat-stroked-button (click)="readOpfs()">
+        <mat-icon>read_more</mat-icon>
+        Read from OPFS
+      </button>
+    </div>
+    @if (opfsMessage()) { <p class="info-msg">{{ opfsMessage() }}</p> }
+    @if (opfsContent(); as c) { <pre class="file-content">{{ c }}</pre> }
+  </section>
+
+  @if (storageEstimate(); as est) {
+    <section class="section" aria-labelledby="storage-heading">
+      <h2 id="storage-heading" class="section-title">Storage Quota</h2>
+      <mat-progress-bar
+        mode="determinate"
+        [value]="est.usagePercent"
+        [attr.aria-label]="'Storage used: ' + est.usagePercent.toFixed(1) + '%'"
+      />
+      <p class="storage-label">
+        {{ formatBytes(est.usage) }} used of {{ formatBytes(est.quota) }}
+        ({{ est.usagePercent.toFixed(1) }}%)
+      </p>
+    </section>
+  }
+</div>

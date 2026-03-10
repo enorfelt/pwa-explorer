@@ -1,0 +1,35 @@
+@use '../feature-page';
+
+.section {
+  margin-bottom: 24px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.paste-result {
+  background: var(--mat-sys-surface-container);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+  font-size: 0.875rem;
+
+  strong {
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  p {
+    margin: 0;
+    word-break: break-all;
+  }
+}
+
+.status-msg {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+}

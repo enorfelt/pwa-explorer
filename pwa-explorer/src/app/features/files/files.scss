@@ -1,0 +1,58 @@
+@use '../feature-page';
+
+.section {
+  margin-bottom: 24px;
+}
+
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.info-msg {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.875rem;
+  margin-bottom: 12px;
+}
+
+.file-preview {
+  background: var(--mat-sys-surface-container);
+  border-radius: 8px;
+  padding: 12px;
+  margin-top: 8px;
+}
+
+.file-name {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 500;
+  margin: 0 0 8px;
+  font-size: 0.875rem;
+}
+
+.file-content {
+  font-family: monospace;
+  font-size: 0.8rem;
+  white-space: pre-wrap;
+  word-break: break-all;
+  max-height: 200px;
+  overflow-y: auto;
+  margin: 0;
+  background: var(--mat-sys-surface);
+  padding: 8px;
+  border-radius: 4px;
+}
+
+.storage-label {
+  font-size: 0.875rem;
+  color: var(--mat-sys-on-surface-variant);
+  margin: 4px 0 0;
+}

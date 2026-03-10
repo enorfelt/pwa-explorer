@@ -1,0 +1,48 @@
+@use '../feature-page';
+
+.section {
+  margin-bottom: 32px;
+}
+
+.pattern-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.stop-btn {
+  margin-bottom: 8px;
+}
+
+.wake-lock-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--mat-sys-surface-container);
+  margin-bottom: 12px;
+  font-size: 0.9rem;
+
+  mat-icon {
+    color: var(--mat-sys-outline);
+  }
+
+  &.active {
+    background: var(--mat-sys-primary-container);
+
+    mat-icon {
+      color: var(--mat-sys-primary);
+    }
+  }
+}
+
+.status-msg {
+  background: var(--mat-sys-secondary-container);
+  color: var(--mat-sys-on-secondary-container);
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  margin-top: 8px;
+}

@@ -1,0 +1,52 @@
+<div class="feature-page">
+  <h1 class="page-title">Device APIs</h1>
+
+  <!-- Vibration -->
+  <section class="section">
+    <h2 class="section-title">
+      Vibration
+      <app-support-badge [level]="vibrationSupported" />
+    </h2>
+    @if (vibrationSupported !== 'supported') {
+      <p class="unsupported-msg">Vibration API not supported.</p>
+    } @else {
+      <div class="pattern-grid">
+        @for (key of patternKeys; track key) {
+          <button mat-stroked-button (click)="vibrate(key)">
+            <mat-icon>vibration</mat-icon>
+            {{ key }}
+          </button>
+        }
+      </div>
+      <button mat-stroked-button (click)="stopVibration()" class="stop-btn">
+        <mat-icon>stop</mat-icon>
+        Stop
+      </button>
+      @if (vibrationStatus()) {
+        <p class="status-msg" role="status">{{ vibrationStatus() }}</p>
+      }
+    }
+  </section>
+
+  <!-- Wake Lock -->
+  <section class="section">
+    <h2 class="section-title">
+      Screen Wake Lock
+      <app-support-badge [level]="wakeLockSupported" />
+    </h2>
+    @if (wakeLockSupported !== 'supported') {
+      <p class="unsupported-msg">Screen Wake Lock API not supported.</p>
+    } @else {
+      <div class="wake-lock-indicator" [class.active]="wakeLockActive()">
+        <mat-icon>{{ wakeLockActive() ? 'visibility' : 'visibility_off' }}</mat-icon>
+        <span>{{ wakeLockActive() ? 'Screen keep-awake is ON' : 'Screen keep-awake is OFF' }}</span>
+      </div>
+      <button mat-flat-button (click)="toggleWakeLock()">
+        {{ wakeLockActive() ? 'Release Wake Lock' : 'Request Wake Lock' }}
+      </button>
+      @if (wakeLockStatus()) {
+        <p class="status-msg" role="status">{{ wakeLockStatus() }}</p>
+      }
+    }
+  </section>
+</div>

@@ -1,0 +1,43 @@
+<div class="feature-page">
+  <h1 class="page-title">PWA vs Native</h1>
+
+  <div class="live-score">
+    <h2 class="section-title">Your Browser Supports</h2>
+    <div class="score-bar">
+      <div class="score-fill" [style.width.%]="(supportedCount() / totalCount()) * 100"></div>
+    </div>
+    <p class="score-label">{{ supportedCount() }} / {{ totalCount() }} capabilities detected</p>
+  </div>
+
+  <div class="live-caps">
+    @for (cap of capabilities(); track cap.id) {
+      <span class="cap-chip" [class]="'level-' + cap.supportLevel">
+        {{ cap.name }}
+      </span>
+    }
+  </div>
+
+  <h2 class="section-title" style="margin-top: 24px;">Capability Matrix</h2>
+  <div class="table-wrapper">
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>Feature</th>
+          <th>PWA</th>
+          <th>Native App</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (row of rows; track row.feature) {
+          <tr>
+            <td class="feature-name">{{ row.feature }}</td>
+            <td><app-support-badge [level]="row.pwa" /></td>
+            <td><app-support-badge [level]="row.native" /></td>
+            <td class="notes">{{ row.notes }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

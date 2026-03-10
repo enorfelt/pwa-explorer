@@ -1,0 +1,66 @@
+@use '../feature-page';
+
+.controls {
+  margin-bottom: 16px;
+}
+
+.sensor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.sensor-card {
+  background: var(--mat-sys-surface-container);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+
+  h2 {
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin: 0 0 12px;
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.compass {
+  font-size: 3rem;
+  display: flex;
+  justify-content: center;
+  margin: 8px 0;
+  color: var(--mat-sys-primary);
+  transition: transform 0.2s ease;
+
+  mat-icon {
+    font-size: 3rem;
+    width: 3rem;
+    height: 3rem;
+  }
+}
+
+.sensor-value {
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin: 8px 0 0;
+}
+
+.data-rows {
+  text-align: left;
+}
+
+.data-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 4px 0;
+  font-size: 0.875rem;
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  span {
+    color: var(--mat-sys-on-surface-variant);
+  }
+}

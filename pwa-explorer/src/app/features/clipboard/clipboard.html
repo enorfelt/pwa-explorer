@@ -1,0 +1,40 @@
+<div class="feature-page">
+  <h1 class="page-title">
+    Clipboard
+    <app-support-badge [level]="isSupported ? 'supported' : 'unsupported'" />
+  </h1>
+
+  @if (!isSupported) {
+    <p class="unsupported-msg">Clipboard API is not supported in this browser.</p>
+  } @else {
+    <section class="section">
+      <h2 class="section-title">Write to Clipboard</h2>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Text to copy</mat-label>
+        <input matInput [(ngModel)]="writeText" name="copyText" />
+      </mat-form-field>
+      <button mat-flat-button (click)="copy()">
+        <mat-icon>content_copy</mat-icon>
+        Copy
+      </button>
+    </section>
+
+    <section class="section">
+      <h2 class="section-title">Read from Clipboard</h2>
+      <button mat-stroked-button (click)="paste()">
+        <mat-icon>content_paste</mat-icon>
+        Paste
+      </button>
+      @if (pastedText() !== null) {
+        <div class="paste-result">
+          <strong>Pasted text:</strong>
+          <p>{{ pastedText() || '(empty)' }}</p>
+        </div>
+      }
+    </section>
+
+    @if (message()) {
+      <p class="status-msg" role="status">{{ message() }}</p>
+    }
+  }
+</div>

@@ -1,0 +1,14 @@
+@if (pwaInstall.canInstall()) {
+  <button mat-icon-button aria-label="Install app" (click)="install()" title="Install PWA Explorer">
+    <mat-icon>install_mobile</mat-icon>
+  </button>
+} @else if (isIos() && !pwaInstall.isStandalone()) {
+  <button mat-icon-button aria-label="Install instructions" (click)="toggleIosHint()" title="How to install on iOS">
+    <mat-icon>ios_share</mat-icon>
+  </button>
+  @if (showIosHint()) {
+    <div class="ios-hint" role="tooltip">
+      Tap <mat-icon inline>ios_share</mat-icon> then "Add to Home Screen"
+    </div>
+  }
+}
