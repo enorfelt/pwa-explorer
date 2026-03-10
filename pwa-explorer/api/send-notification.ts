@@ -1,6 +1,9 @@
+import { Redis } from '@upstash/redis';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import webpush from 'web-push';
-import { getSubscriptions } from './subscribe';
+import { KV_KEY } from './subscribe';
+
+const redis = Redis.fromEnv();
 
 function initVapid() {
   const publicKey = process.env.VAPID_PUBLIC_KEY;
@@ -30,8 +33,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     url?: string;
   };
 
-  const subscriptions = getSubscriptions();
-  if (subscriptions.size === 0) {
+  const data = await redis.hgetall<Record<string, string>>(KV_KEY);
+  if (!data || Object.keys(data).length === 0) {
     res.status(400).json({ error: 'No subscribers' });
     return;
   }
@@ -40,14 +43,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   let sent = 0;
   let failed = 0;
 
-  for (const [endpoint, sub] of subscriptions) {
+  for (const [field, subJson] of Object.entries(data)) {
+    const sub = JSON.parse(subJson) as webpush.PushSubscription;
     try {
-      await webpush.sendNotification(sub as unknown as webpush.PushSubscription, payload);
+      await webpush.sendNotification(sub, payload);
       sent++;
     } catch (err) {
       failed++;
       const statusCode = (err as { statusCode?: number }).statusCode;
-      if (statusCode === 404 || statusCode === 410) subscriptions.delete(endpoint);
+      if (statusCode === 404 || statusCode === 410) {
+        await redis.hdel(KV_KEY, field);
+      }
     }
   }
 

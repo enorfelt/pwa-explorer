@@ -1,5 +1,11 @@
+import { Redis } from '@upstash/redis';
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { createHash } from 'node:crypto';
 import webpush, { PushSubscription } from 'web-push';
+
+const redis = Redis.fromEnv();
+
+export const KV_KEY = 'push_subscriptions';
 
 function initVapid() {
   const publicKey = process.env.VAPID_PUBLIC_KEY;
@@ -9,15 +15,11 @@ function initVapid() {
   webpush.setVapidDetails(`mailto:${email}`, publicKey, privateKey);
 }
 
-// Vercel serverless: store subscriptions in an in-memory store.
-// In production, swap this for a database (Vercel KV, PlanetScale, etc.)
-const subscriptions = new Map<string, PushSubscription>();
-
-export function getSubscriptions() {
-  return subscriptions;
+export function endpointField(endpoint: string): string {
+  return createHash('sha256').update(endpoint).digest('hex');
 }
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     initVapid();
   } catch (e) {
@@ -31,11 +33,13 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
       res.status(400).json({ error: 'Invalid subscription' });
       return;
     }
-    subscriptions.set(sub.endpoint, sub);
+    await redis.hset(KV_KEY, { [endpointField(sub.endpoint)]: JSON.stringify(sub) });
     res.status(201).json({ message: 'Subscribed successfully' });
   } else if (req.method === 'DELETE') {
     const sub = req.body as PushSubscription;
-    if (sub?.endpoint) subscriptions.delete(sub.endpoint);
+    if (sub?.endpoint) {
+      await redis.hdel(KV_KEY, endpointField(sub.endpoint));
+    }
     res.json({ message: 'Unsubscribed' });
   } else {
     res.status(405).json({ error: 'Method not allowed' });
