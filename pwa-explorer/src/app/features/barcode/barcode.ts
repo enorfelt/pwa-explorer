@@ -11,17 +11,19 @@ import { MatIcon } from '@angular/material/icon';
 import { MatList, MatListItem } from '@angular/material/list';
 import { SupportBadge } from '../../shared/components/support-badge/support-badge';
 
-declare class Html5QrcodeScanner {
-  constructor(
-    elementId: string,
-    config: object,
-    verbose: boolean,
-  );
-  render(
-    onSuccess: (decodedText: string, result: { result: { format: { formatName: string } } }) => void,
-    onError: (error: string) => void,
-  ): void;
-  clear(): Promise<void>;
+declare class Html5Qrcode {
+  constructor(elementId: string, verbose?: boolean);
+  start(
+    cameraIdOrConfig: string | MediaTrackConstraints,
+    configuration: { fps?: number; qrbox?: { width: number; height: number } },
+    qrCodeSuccessCallback: (
+      decodedText: string,
+      result: { result: { format?: { formatName: string } } },
+    ) => void,
+    qrCodeErrorCallback?: (errorMessage: string) => void,
+  ): Promise<null>;
+  stop(): Promise<void>;
+  clear(): void;
 }
 
 export interface ScanResult {
@@ -39,7 +41,7 @@ export interface ScanResult {
 })
 export class Barcode implements OnDestroy {
   private readonly zone = inject(NgZone);
-  private scanner?: Html5QrcodeScanner;
+  private scanner?: Html5Qrcode;
 
   protected readonly isScanning = signal(false);
   protected readonly isNativeSupported = signal('BarcodeDetector' in window);
@@ -55,23 +57,37 @@ export class Barcode implements OnDestroy {
     this.isScanning.set(true);
 
     setTimeout(() => {
+      if (!this.isScanning()) return;
       try {
-        this.scanner = new Html5QrcodeScanner(
-          'qr-reader',
-          { fps: 10, qrbox: { width: 250, height: 250 }, aspectRatio: 1.0 },
-          false,
-        );
-        this.scanner.render(
-          (decodedText, result) => {
+        this.scanner = new Html5Qrcode('qr-reader');
+        this.scanner
+          .start(
+            { facingMode: 'environment' },
+            { fps: 10, qrbox: { width: 250, height: 250 } },
+            (decodedText, result) => {
+              this.zone.run(() => {
+                this.results.update((r) =>
+                  [
+                    {
+                      text: decodedText,
+                      format: result?.result?.format?.formatName ?? 'Unknown',
+                      timestamp: new Date(),
+                    },
+                    ...r,
+                  ].slice(0, 20),
+                );
+              });
+            },
+            () => {
+              /* ignore per-frame scan errors */
+            },
+          )
+          .catch((e: Error) => {
             this.zone.run(() => {
-              this.results.update(r => [
-                {text: decodedText, format: result?.result?.format?.formatName ?? 'Unknown', timestamp: new Date()},
-                ...r,
-              ].slice(0, 20));
+              this.error.set(e.message);
+              this.isScanning.set(false);
             });
-          },
-          () => { /* ignore scan errors */ },
-        );
+          });
       } catch (e) {
         this.zone.run(() => {
           this.error.set((e as Error).message);
@@ -82,8 +98,12 @@ export class Barcode implements OnDestroy {
   }
 
   protected stopScanner(): void {
-    this.scanner?.clear().catch(() => undefined);
     this.isScanning.set(false);
+    if (this.scanner) {
+      const scanner = this.scanner;
+      this.scanner = undefined;
+      scanner.stop().catch(() => undefined);
+    }
   }
 
   protected clearResults(): void {
