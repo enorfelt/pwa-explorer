@@ -111,11 +111,12 @@ export class Location implements AfterViewInit, OnDestroy {
   private updateMap(pos: GeoPosition): void {
     if (!this.leafletMap) return;
     const latlng: [number, number] = [pos.latitude, pos.longitude];
-    this.leafletMap.setView(latlng, 15);
     if (!this.marker) {
+      this.leafletMap.setView(latlng, 15);
       this.marker = L.marker(latlng).addTo(this.leafletMap);
     } else {
       this.marker.setLatLng(latlng);
+      this.leafletMap.panTo(latlng);
     }
   }
 }
